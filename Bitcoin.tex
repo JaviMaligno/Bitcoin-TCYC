@@ -1,0 +1,311 @@
+\documentclass[twoside]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{caption}
+\usepackage[]{graphicx}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{tikz-cd}
+\usetikzlibrary{babel}
+\usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+\usepackage{bm}  
+\usetikzlibrary{arrows}
+\usetikzlibrary{cd}
+\usepackage[spanish]{babel}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{floatrow}
+\usepackage{makeidx}
+\usepackage[tocflat]{tocstyle}
+\usetocstyle{standard}
+\usepackage{subfiles}
+\usepackage{color}  
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,citecolor=red, linkcolor=blue}
+\usepackage{eurosym}
+%\usepackage{ntheorem}
+
+
+\renewcommand{\baselinestretch}{1,4}
+\setlength{\oddsidemargin}{0.25in}
+\setlength{\evensidemargin}{0.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{0.1in}
+\setlength{\headheight}{0.1in}
+\setlength{\headsep}{0.1in}
+\setlength{\textheight}{8in}
+\setlength{\footskip}{0.75in}
+
+\theoremstyle{definition}
+
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{defi}[teorema]{Definición}
+\newtheorem{coro}[teorema]{Corolario}
+\newtheorem{lemma}[teorema]{Lema}
+\newtheorem{ej}[teorema]{Ejemplo}
+\newtheorem{ejs}[teorema]{Ejemplos}
+\newtheorem{observacion}[teorema]{Observación}
+\newtheorem{observaciones}[teorema]{Observaciones}
+\newtheorem{prop}[teorema]{Proposición}
+\newtheorem{propi}[teorema]{Propiedades}
+\newtheorem{nota}[teorema]{Nota}
+\newtheorem{notas}[teorema]{Notas}
+\newtheorem*{dem}{Demostración}
+\newtheorem{ejer}[teorema]{Ejercicio}
+\newtheorem{consec}[teorema]{Consecuencia}
+\newtheorem{concl}[teorema]{Conclusión}
+
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\sen}[1]{sen #1}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\ninf}[1]{\norm{#1}_\infty}
+\providecommand{\numn}[1]{\norm{#1}_1}
+\providecommand{\gabs}[1]{\left|{#1}\right|}
+\newcommand{\bor}[1]{\mathcal{B}(#1)}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Pro}{\mathbb{P}}
+\newcommand{\Tau}{\mathcal{T}}
+\newcommand{\verteq}{\rotatebox{90}{$\,=$}}
+\newcommand{\vertequiv}{\rotatebox{110}{$\,\equiv$}}
+\providecommand{\lrg}{\longrightarrow}
+\providecommand{\func}[2]{\colon{#1}\longrightarrow{#2}}
+\newcommand*{\QED}{\hfill\ensuremath{\blacksquare}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}
+\newcommand*{\longhookarrow}{\ensuremath{\lhook\joinrel\relbar\joinrel\rightarrow}}
+
+
+\begin{document}
+%\title{Topología de Superficies}
+%\author{Antonio Rafael Quintero Toscano\\ Javier Aguilar Martín}
+%\date{Curso 2016/2017}
+%\maketitle
+
+\author{Javier Aguilar Martín y Rafael González López}
+\date{\today}
+\title{La criptografía detrás de Bitcoin}
+
+\maketitle
+
+\begin{figure}[h!]
+		\includegraphics[scale=0.7]{bitcoin.jpg}
+\end{figure}
+
+\begin{abstract}
+    En este trabajo vamos a explorar el funcionamiento interno de Bitcoin, la criptomoneda más famosa y más valorada. Para ello, empezaremos presentando informalmente qué es Bitcoin y explicando los conceptos criptográficos previos que serán necesarios para entender el resto del trabajo. A continuación entraremos en detalle en los algoritmos usados por Bitcoin para poder considerarse funcional y seguro. Por último comentaremos algunas otras aplicaciones de las ideas que subyacen a esta moneda.
+\end{abstract}
+
+
+	\vfill
+	Esta obra está licenciada bajo la Licencia Creative Commons Atribución 3.0 España. Para ver una copia de esta licencia, visite \url{http://creativecommons.org/licenses/by/3.0/es/} o envíe una carta a Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+
+\newpage
+\tableofcontents
+
+\newpage
+
+
+\section{Preliminares}
+
+\subsection{¿Qué es Bitcoin?}
+
+Bitcoin (abreviado BTC) es una criptomoneda o criptodivisa, es decir, un medio de intercambio digital que usa las herramientas de la criptografía para garantizar la seguridad y el anonimato. Bitcoin no es la única criptomoneda existente, pero sí que fue la primera que empezó a operar en el año 2009. Algo que diferencia a esta moneda del dinero fiduciario (dinero usual) es su descentralización, ya que no existe un Banco Central de Bitcoin. Por ello no se puede manipular la cantidad total de Bitcoin existente, que está previamente fijada y es pública. Actualmente es reconocida como legal en varios países como Alemania o Japón, mientras que en otros como Bolivia está explíticamente prohibido. En muchos otros existe un vacío legal. Su valor a día de hoy alcanza los 1600\euro/BTC, lo cual lo convierte en un poderoso activo financiero. \\
+
+Se puede conseguir este tipo de dinero intercambiándolo por bienes y servicios (como cualquier otro dinero) a través de un monedero o \emph{wallet}, o bien obtenerlos directamente \emph{minando} (por analogía al oro). Los procesos de intercambio y obtención de Bitcoin serán explicados más detalladamente en secciones posteriores. Antes de eso, aclararemos algunos conceptos que serán utilizados más adelante. 
+
+\subsection{Funciones hash.}
+\begin{defi}
+Una \textbf{función hash} es una función que recibe datos de tamaño arbitrario y devuelve datos de tamaño fijo (generalmente 40 caracteres). En particular permiten recibir cadenas de texto de longitud arbitraria devolviendo siempre una cadena de texto del mismo tamaño. En criptografía se exige que estas funciones sean \emph{one way}. Al texto recibido se le suele llamar \textbf{input} o \textbf{mensaje}, mientras que el texto devuelto se puede llamar \textbf{output} o \textbf{digest}.
+\end{defi}
+Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, cuya salida es de 160 bits, para tener una probabilidad de tener una colisión de $\frac{1}{2}$ necesitaríamos $1.24\cdot 10^{24}$ elementos.
+
+Estas funciones tienen la propiedad de que un pequeño cambio en el mensaje recibido genera una salida totalmente distinta, lo que las vuelve impredecibles, como podemos observar en el siguiente ejemplo.
+	\newpage
+\begin{ej}\
+En este ejemplo vemos el funcionamiento de la función SHA1. 
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{hashexample}
+\end{figure}
+\end{ej}
+
+No todas las funciones hash son seguras\footnote{SHA1 es un ejemplo de esto \url{https://shattered.io/}}, pero la que usa Bitcoin, SHA256, es una de las más seguras que existen.
+
+\newpage
+
+\subsection{Curvas elípticas.}
+\begin{defi}
+Una \textbf{curva elíptica} es una curva plana representada algebraicamente como una ecuación de la forma $y=x^3+ax+b$. 
+\end{defi}
+
+\begin{ej} Para $a=0$ y $b=7$, que es la que usa Bitcoin, tiene esta forma:
+\begin{figure}[h!]
+\includegraphics[scale=0.42]{ec}
+\end{figure}
+\end{ej}
+
+Los puntos de una curva elíptica tiene la propiedad de que forman un grupo si definimos una suma particular que vamos a ver a continuación. 
+
+\subsubsection{Suma en una curva elípitca.}
+
+Para sumar dos puntos $P$ y $Q$ pertenecientes a la curva elíptica, en primer lugar tenemos que trazar la recta que pasa por dichos puntos y hallar la intersección de esta recta con la curva elíptica, al que llamaremos $R'$. Después debemos hacer una reflexión del punto de intersección con respecto al eje de abscisas (obsérvese que las curvas elípticas son simétricas con respecto a este eje). El punto obtenido es $R=P+Q$. Lo vemos más claramente en la siguiente imagen: 
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{sumec}
+\end{figure}
+
+En el caso de que queramos sumar un punto $P$ consigo mismo debemos hacer la operación anterior considerando la recta tangente a la curva $y$ en $P$ como se observa en la siguiente imagen:
+
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{pmasp}
+\end{figure}
+
+Como elemento neutro deberemos considerar al punto del infinito de la curva. Se puede observar que el inverso de un punto sería su simétrico con respecto al eje de abscisas. De forma natural se define el producto por escalar $\alpha P$ siempre que $\alpha\in\Z$ como la suma de $\alpha$ veces $P$ (o de su inverso si $\alpha<0$).
+
+\subsubsection{Curvas elípticas sobre cuerpos finitos.} 
+Realmente Bitcoin no usa la curva anterior sobre $\R$ tal como la hemos dibujado, sino sobre un cuerpo finito módulo $2^{256} – 2^{32} – 2^9 – 2^8 – 2^7 – 2^6 – 2^4 - 1$, que es primo. Además se selecciona un punto base para hacer las operaciones que tiene como orden un primo lo suficientemente grande. Tanto estos parámetros como la curva son los mismos para todos los usuarios. Por tener visualizar qué aspecto tiene una curva elíptica sobre un cuerpo finito, observémos este ejemplo en el que se toma como primo el número $67$:
+\begin{figure}[h!]
+\includegraphics[scale=0.38]{field}
+\end{figure}
+
+\newpage
+
+A pesar de lo diferente que se ve, conserva las propiedades esenciales del caso anterior. Además sigue siendo simétrica. La suma también cambia visualmente como podemos ver en esta imagen en la que sumamos $(2,22)+(6,25)$:
+\begin{figure}[h!]
+\includegraphics[scale=0.45]{sumfield}
+\end{figure}
+
+Con esto terminamos los preliminares y pasamos a explicar cómo funciona Bitcoin.
+\newpage
+\section{Funcionamiento interno de Bitcoin.}
+\subsection{Transacciones, validación y firma.}
+Comencemos precisamente el concepto de transacción, la operación fundamental en el funcionamiento de Bitcoin. 
+\begin{defi} Una \textbf{transacción} es un movimiento de Bitcoin de una direccion de origen a una dirección de destino. 
+\end{defi}
+Cada dirección de Bitcoin representa una clave pública. Para gastar Bitcoin es necesario conocer la clave privada asociada a la clave publica que contenga un saldo en Bitcoins. Entonces, se pueden gastar esos Bitcoins, es decir, transferirlos a otra dirección, firmando digitalmente con la clave privada la transmisión de esta información y enviando la nueva transacción a toda la red, la cuál está compuesta por nodos.
+\begin{defi}
+Los \textbf{nodos} de Bitcoin son las entidades que forman parte del protocolo distribuido para crear un registro común de información. Cada vez que se realiza una transacción, esta se envía a todos los nodos. Por ello, tienen la tarea de validar, afianzar, transmitir y almacenar. Esto se hará con ayuda de una base de datos llamada \emph{blockchain}, que veremos más adelante.
+\end{defi}
+\begin{figure}[h!]
+\includegraphics[scale=0.45]{transaction}
+\end{figure}
+Ahora vamos a ver detalladamente en qué consiste una transacción. 
+
+Supongamos que Alice quiere enviar $5$ BTC a Bob. Para ello, Alice debe probar que tiene ese dinero y para ello el total de transacciones que haya realizado anteriormente debe sumar al menos esos $5$ Bitcoins. Las transacciones usadas como referencia se llaman \emph{inputs}. Los nodos que vayan a verificar la transacción deben comprobar los inputs para asegurar que Alice era la receptora y que la suma asciende al menos a la cantidad que desea enviar.
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{inputs}
+\end{figure}
+
+Cada input debe usarse completamente, por lo que si se desea enviar una cantidad que no coincide exactamente con ninguna suma de transacciones previas se devolverá la ``vuelta'' como un segundo output además del dinero enviado a Bob. 
+
+A través de estas referencias a transacciones pasadas, la propiedad de Bitcoins se basa en una cadena de transacciones (veremos más adelante que es la cadena de bloques). Al instalar por primera vez un monedero de Bitcoin, el software comprueba automáticamente todas las transacciones anteriores para asegurarse de tener un registro fidedigno.
+
+Una vez que una transacción ha sido usada como referencia se considera gastada y no puede volverse a usar. De otro modo podría cometer doble gasto aludiendo a la misma transacción varias veces. Por lo tanto, al validar una transacción también se comprueba que las transacciones no habían sido usadas antes. Debido a que las transacciones en la red de Bitcoin se cuentan por decenas de millones, se aligera el proceso mediante un índice de transacciones no usadas. En definitiva, tener Bitcoins significa que hay una lista de transacciones que apuntan a tu dirección y que no han sido gastadas.
+
+Ahora que hemos dejado clara la idea general de cómo se produce una transacción, volvamos a la operación que quería realizar Alice. Sean $(PK_A,SK_A)$ y $(PK_B,SK_B)$ los pares de calve pública-privada de Alice y Bob respectivamente. La función $Add(PK)$ nos devuelve la dirección generada a partir de la clave pública $PK$ aplicándole una función hash y añadiéndole delante un $1$ o un $3$ (esto se hace simplemente para indentificarlo como dirección pública de Bitcoin). Además será necesaria una firma digital, que explicaremos posteriormente, y que denotaremos $Sign_{SK}(m)$ donde $m$ representa la transacción (ya que esta firma varía en cada transacción). Sea $H$ una función hash. Supongamos que Alice ya había recibido la cantidad de $5$ BTC en una transacción $T_0$ a su dirección, $Add(PK_A)$.  Como hemos explicado antes, $T_0=\{input_0, output_0\}$. En este caso $input_0$ sería el registro anterior de transacciones y $output_0=\{Add(PK_A),5\}$. 
+
+Para enviar el dinero a Bob, Alice necesita crear una nueva transacción $T_1$ de la siguiente forma:
+\begin{align*}
+&T_1=\{input_1,output_1\}\\
+&input_1=\{H(T_0),Sign_{SK_A}(T_0+input),PK_A\}\\
+&output_1=\{Add(PK_B),5\}
+\end{align*}
+
+Veamos por qué aparece cada uno de los términos en el $input_1$. En primer lugar, $H(T_0)$ es un hash de la transacción y actúa como puntero en la cadena de bloques como se verá en secciones posteriores. Después, se genera una nueva firma digital que solo se puede realizar con la clave privada $SK_A$ que solo posee Alice. Por último es necesario que aparezca la clave pública de Alice para poder validar la transacción y comprobar que efectivamente era dinero proveniente de su dirección. 
+
+En el $output_1$ simplemente se indica a quién va dirigida la cantidad que se especifica, de forma que solo Bob podrá gastar esta cantidad en transacciones posteriores. Bob puede verificar que le han sido transferidos los fondos comprobando que $Add(PK_A)$ coincide con la dirección de destino de $T_0$ y también que la firma es correcta $Sign_{SK_A}(T_0+input)$ usando $PK_A$. 
+
+Nos queda pendiente mostrar cómo se calcula la firma digital.
+
+\subsubsection{Algoritmo de firma digital en curvas elípticas. }
+
+El algoritmo usado en esta sección es simplemente ElGamal visto en clase aplicado a un grupo especial, que es la curva elíptica sobre un cuerpo finito de la que hablamos en los preliminares. 
+
+En primer lugar se fija un \textbf{punto base} en la curva, llamémoslo $P$ de orden $N$ un primo bastante grande. Se elige como clave privada un número aleatorio $x\in\{1,\dots, N-1\}$. A partir de este, claculamos la clave pública $Y=xP$. Esto indica que el número máximo de claves públicas (y por tanto de direcciones) es justamente el orden de $P$. 
+
+Debido a la complejidad computacional de la suma en curvas elípticas, es factible clacular la clave pública a partir de la clave privada y el punto base, pero es infactible calcular la clave privada a partir de la clave pública y el punto base. 
+
+En Bitcoin, tanto el punto base como su orden se representan como un \emph{string} hexadecimal. Concretamente:
+\begin{itemize}
+\item Punto base: B04 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 59F2815B 16F81798 483ADA77 26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419 9C47D08F FB10D4B8
+\item Orden:  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
+\end{itemize}
+
+Así pues, las claves también se representarán de este modo. Ahora que ya tenemos las claves, podemos empezar a firmar. En el funcionamiento real, los datos que se van a firmar se pasan por una función hash para que tengan el mismo número de bits (256) que el orden de $P$. Sin embargo, por simplicidad, nos saltaremos ese paso. Sea pues $P$ el punto base, $N$ su orden, $x$ la clave privada y $z$ un número entero que representa los datos que vamos a firmar. El algoritmo de la firma digital consiste en lo siguiente:
+\begin{enumerate}
+\item Elegir un número entero aleatorio $k\in\{1,\dots,N-1\}$.
+\item Clacular el punto $(a,b)=k*P$ usando la multiplicación por escalar de la curva elíptica. 
+\item Encontrar $r= a\mod N$. Si $r=0$, vuelta al paso 1.
+\item Encontrar $s= (z+r*x)k^{-1}\mod N$. Si $s=0$, vuelta al paso 1. 
+\item La firma es el par $(r,s)$. 
+\end{enumerate}
+
+Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada, ya que el resto de datos son conocidos. Para ver ejemplos consultar \cite{Eric}.
+
+\subsection{Blockchain, afianzamiento y minería.}
+
+Comenzamos esta sección definiendo un concepto al que nos hemos referido varias veces y que es fundamental tanto en Bitcoin como en otras aplicaciones que han ido surgiendo a raíz del éxito de esta moneda. 
+\begin{defi}
+Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro de contabilidad de Bitcoin, es decir, como el registro de cada transacción que se ha hecho desde que se creó Bitcoin. Este registro único se genera, distribuye y almacena de forma distribuida, de modo que todos los nodos están de acuerdo en su contenido sin la posibilidad de ser intervenido de ninguna forma. 
+\end{defi}
+
+Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir informaión -no se puede quitar ni modificar nada-. Los nuevos \textbf{bloques} que se van añadiendo contienen todas las transacciones que se han hecho desde que se añadió el bloque anterior. Cada bloque tiene un puntero que apunta al bloque anterior, formando así una cadena, y un valor de \textit{nonce} (número aleatorio o pseudo-aleatorio de un solo uso) para crear bloques nuevos. ¿Pero cómo se generan estos bloques? Gracias a los mineros.
+\begin{defi}
+Los \textbf{mineros} son aquellos usuarios que se dedican a validar las transacciones mediante una red P2P (abreviatura de \emph{peer-to-peer}, esto es, una red en la que todos los nodos tienen la misma importancia) y creando nuevos bloques con las transacciones validadas. Cualquier usuario puede ser minero y por cada bloque generado se recibe un premio en forma de bitcoins. 
+\end{defi}
+Los Bitcoins se crean a partir de un tipo de transacción especial, la transacción de generación, que se incluye en cada bloque. Dicha transacción tiene una dirección de destino (que pertenece al minero que se ha generado el bloque) pero no tiene ninguna dirección de origen. Actualmente, pues como veremos esta cantidad va decreciendo, se premia $12.5$ BTC al minero o pool (agrupación de mineros que trabaja en conjunto) que resuelve el bloque. Más adelante explicaremos en profundidad en qué consiste la minería.
+
+Resumiendo, el funcionamiento básico de Bitcoin se basa en las transacciones. Estas se envían de una dirección a otra a través de los nodos, que son los encargados de validar -mediante los mineros- las transacciones y almacenarlas en la blockchain. Ahora explicaremos todas estas funciones de forma detenida.
+
+
+Ademas de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida (a través de una red de nodos P2P) en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
+\begin{defi} Un \textbf{sistema de prueba de trabajo} o \textbf{POW} es un sistema que requiere que el cliente del servicio realice algún tipo de trabajo que tenga cierto coste y que es verificado fácilmente en la parte del servidor. Normalmente el trabajo consiste en realizar un cómputo en el ordenador del cliente. En el caso de Bitoin, el sistema de prueba de trabajo permite la transferencia de valor de manera directa entre los participantes de una transacción sin necesidad de depender de ninguna organización central de confianza. 
+\end{defi}
+De este modo, mientras el poder computacional de la red esté distribuido, un grupo pequeño de mineros traidore no podrá modificar la cadena de bloques en su beneficio. Esta validación puede ocurrir simultáneamente con varios bloques, en cuyo caso se formaría una rama y se continúa a partir del bloque que llega primero.
+\begin{figure}[h!]
+\includegraphics[scale=0.45]{rama}
+\end{figure}
+
+¿En qué consiste dicha prueba? La prueba de trabajo que utiliza Bitcoin consiste en encontrar un valor de nonce para el nuevo bloque de tal manera que el
+hash del bloque sea inferior a un valor objetivo fijado ($H(B) < t$). Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. 
+\begin{figure}[h!]
+\includegraphics[scale=0.15]{grafica}
+\captionsetup{labelformat=empty}
+ \caption{La gráfica RX 480 8GB GDDR5 permite minar a  29 MH/s}
+\end{figure}
+
+La resolución de un bloque ocurre, más o menos, cada diez minutos. Esta red computacional es la más potente que existe hoy día, por encima de Google o la NSA.
+un valor de nonce para el bloque B de tal manera que , es decir, que el hash del bloque sea inferior al objetivo
+fijado. El valor objetivo no es constante, y permite adaptar la dificultad de la prueba al poder de computo de la red en cada momento, con el propósito de generar un nuevo bloque cada 10 minutos. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para dar marcha atras y anular transacciones  que ha realizado, ya sea para tener control de lo que se anota en el registro comun, ser  a necesario que  este disponga de 
+un poder de computo superior al  50  de la red4 . En caso contrario, si el atacante intenta modificar la cadena de bloques
+generando sus propias alternativas, no tendra suficiente poder 
+de computo como para generar bloques más r  apido que el 
+resto de la red, por lo que su rama no sera la m  as larga, y 
+sera descartada. 
+\subsection{Almacenamiento}
+\subsection{Halving (J)}
+Extras: Bitcoin es anónimo. Si sabes esconder tu IP (por ejemplo usando TOR), lo único que necesitas es usar la clave pública. Además, puedes incluso generar una nueva clave pública para cada transacción. Simplemente pulsando un botón en tu cartera puedes generar una nueva clave pública y privada.
+
+
+
+
+
+\addcontentsline{toc}{section}{Bibliografía}
+\newpage
+\begin{thebibliography}{}
+\bibitem{Bizant} Cristina Pérez-Solà \& Jordi Herrera-Joancomartí, \textit{Bitcoins y el problema de los generales bizantinos}, 2014. \url{https://web.ua.es/en/recsi2014/documentos/papers/bitcoins-y-el-problema-de-los-generales-bizantinos.pdf}
+\bibitem{Khan} Kahn Academy. \url{https://www.khanacademy.org/economics-finance-domain/core-finance/money-and-banking/bitcoin/v/bitcoin-what-is-it}
+\bibitem{wiki} Bitcoinwiki, \url{https://en.bitcoin.it/wiki/How_bitcoin_works}.
+\bibitem{Eric} Eric Rywalder, \textit{The math behind Bitcoin}, Coindesk, 2014.\\ \url{http://www.coindesk.com/math-behind-bitcoin/}
+\bibitem{Alex} Alex Gorale, \textit{Explaining the math behind Bitcoin.} Cryptocoinsnews, 2014.\\ \url{https://www.cryptocoinsnews.com/explaining-the-math-behind-bitcoin/}
+\bibitem{youtube} Scott Driscoll, \textit{How Bitcoin works under the hood}. ImponderableThings, 2013. \url{http://www.imponderablethings.com/2013/07/how-bitcoin-works-under-hood.html}
+\end{thebibliography}
+
+
+
+\end{document}
