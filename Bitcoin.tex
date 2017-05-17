@@ -301,17 +301,26 @@ Una progresión geométrica es una sucesión construida de forma recursiva como:
 &x_0=a\in\R\\
 &x_n=rx_{n+1}, r\in\R .
 \end{align*}
-En el caso de las recompensas por minar Bitcoin, $r=\frac{1}{2}$ y $r=50\cdot 210000$ (el total de Bitcoins emitidos mientras la recompensa era de 50 BTC). La suma de una progresión geométrica en la que $0<r<r$ tiene la siguiente fórmula que no vamos a probar:
-\[
-\sum_{n=0}^{+\infty}x_n=\frac{a}{1-r}
-\]
 \end{defi}
 
+En el caso de las recompensas por minar Bitcoin, $r=\frac{1}{2}$ y $a=50\cdot 210000$ (el total de Bitcoins emitidos mientras la recompensa era de 50 BTC). \begin{prop}
+La suma de una progresión geométrica en la que $0<r<1$ tiene la siguiente fórmula que no vamos a probar:
+\[
+S=\sum_{n=0}^{+\infty}x_n=\frac{a}{1-r}.
+\]
+\end{prop}
+
+Aplicando esto a Bitcoin obtenemos precisamente $S=\frac{10500000}{\frac{1}{2}} = 21000000$. Nótese que la cantidad total de Bitcoin no llegará a ser exactamente 21 millones (concretamente será 20999999.97480000 BTC, esto es, 2520000 Satoshis menos de los 21 millones de BTC) pues la cantidad mínima con la que se puede recompensar es con $10^{-8}$ BTC = 1 Satoshi. De hecho se puede calcular cuándo se empezará a recompensar con 1 Satoshi, lo cual será al acanzar el bloque 6720000. Por lo tanto, a partir del bloque 6930000 no habrá recompensa en absoluto. Cuando ese momento llegue, no se crearán más Bitcoins y los mineros solo obtendrán beneficios a través de comisiones en las transacciones. Para entonces se espera que el valor del Bitcoin sea tan alto que estas comisiones sean más que suficientes para compensar a los mineros.\\
+
+No solo se conoce la cantidad máxima que habrá de Bitcoin, sino también cuándo se alcanzará esta cantidad. El sistema ha sido diseñado para que se produzca aproximadamente un bloque cada 10 minutos. Para ello, a medida que la capacidad computacional de la red aumenta, también se incrementa la dificultad de generar los bloques. ¿Por qué 10 minutos? En realidad esta cantidad es arbitraria y cada criptodivisa establece el suyo, pero tiempos demasiado cortos podrían generar inestabilidad y tiempos muy largos retrasarían las confirmaciones. 
+
+Un bloque cada 10 minutos supone unos 144 bloques por día. Así que el tiempo para alcanzar 6930000 se necesitan $\frac{6930000}{144} = 48125$ días, algo menos de 132 años. Esto quiere decir que en torno al año 2140 se habrán minado todos los Bitcoins previstos.
 
 
 
 
 
+\vspace{5cm}
 
 
 
