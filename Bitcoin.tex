@@ -116,7 +116,9 @@
 
 \subsection{¿Qué es Bitcoin?}
 
-Bitcoin (abreviado BTC) es una criptomoneda o criptodivisa, es decir, un medio de intercambio digital que usa las herramientas de la criptografía para garantizar la seguridad y el anonimato. Bitcoin no es la única criptomoneda existente, pero sí que fue la primera que empezó a operar en el año 2009. Algo que diferencia a esta moneda del dinero fiduciario (dinero usual) es su descentralización, ya que no existe un Banco Central de Bitcoin. Por ello no se puede manipular la cantidad total de Bitcoin existente, que está previamente fijada y es pública. Actualmente es reconocida como legal en varios países como Alemania o Japón, mientras que en otros como Bolivia está explíticamente prohibido. En muchos otros existe un vacío legal. Su valor a día de hoy alcanza los 1600\euro/BTC, lo cual lo convierte en un poderoso activo financiero. \\
+Bitcoin (abreviado BTC) es una criptomoneda o criptodivisa, es decir, un medio de intercambio digital que usa las herramientas de la criptografía para garantizar la seguridad y el anonimato. Bitcoin no es la única criptomoneda existente, pero sí que fue la primera que empezó a operar en el año 2009. Algo que diferencia a esta moneda del dinero fiduciario (dinero usual) es su descentralización, ya que no existe un Banco Central de Bitcoin. Por ello no se puede manipular la cantidad total de Bitcoin existente, que está previamente fijada y es pública. Bitcoin a su vez se puede dividir en unidades menores hasta una fracción de $10^{-8}$ BTC llamada Satoshi (en honor a su creador, Satoshi Nakamoto).\\
+
+Actualmente es reconocida como legal en varios países como Alemania o Japón, mientras que en otros como Bolivia está explíticamente prohibido. En muchos otros existe un vacío legal. Su valor a día de hoy alcanza los 1600\euro/BTC, lo cual lo convierte en un poderoso activo financiero. \\
 
 Se puede conseguir este tipo de dinero intercambiándolo por bienes y servicios (como cualquier otro dinero) a través de un monedero o \emph{wallet}, o bien obtenerlos directamente \emph{minando} (por analogía al oro). Los procesos de intercambio y obtención de Bitcoin serán explicados más detalladamente en secciones posteriores. Antes de eso, aclararemos algunos conceptos que serán utilizados más adelante. 
 
@@ -224,7 +226,7 @@ Nos queda pendiente mostrar cómo se calcula la firma digital.
 
 \subsubsection{Algoritmo de firma digital en curvas elípticas. }
 
-El algoritmo usado en esta sección es simplemente ElGamal visto en clase aplicado a un grupo especial, que es la curva elíptica sobre un cuerpo finito de la que hablamos en los preliminares. 
+Para poder firmar primero se necesita tener las claves. El procedimiento por el cual se generan es ElGamal sobre una curva elíptica, que funciona de la misma forma que en cualquier otro grupo, pero con las operaciones explicadas en la primera sección.  Por ello no vamos a detallar el proceso, pero sí vamos a señalar sus pasos. 
 
 En primer lugar se fija un \textbf{punto base} en la curva, llamémoslo $P$ de orden $N$ un primo bastante grande. Se elige como clave privada un número aleatorio $x\in\{1,\dots, N-1\}$. A partir de este, claculamos la clave pública $Y=xP$. Esto indica que el número máximo de claves públicas (y por tanto de direcciones) es justamente el orden de $P$. 
 
@@ -289,6 +291,30 @@ resto de la red, por lo que su rama no sera la m  as larga, y
 sera descartada. 
 \subsection{Almacenamiento}
 \subsection{Halving (J)}
+El sistema de Bitcoin ha sido diseñado de modo que la recompensa por minar se reduce a la mitad cada 210000 bloques. Este proceso se conoce como \textbf{Halving} o \textbf{Halvening}. Cuando el bloque 0 (conocido como \emph{bloque génesis}) fue minado a principios de 2009 la recompensa fue de 50 BTC. El primer Halving tuvo lugar a finales de 2012, con lo que la recompensa fue de 25 BTC. El último Halvening se produjo en 2016, por lo que actualmente la recompensa es de 12,5 BTC.  
+
+En la introducción comentamos que la cantidad de Bitcoin que se podrá minar es fija (concretamente 21 millones de BTC), y aunque el motivo de trasfondo es puramente económico, está directamente relacionado con el Halving. La explicación se encuentra en la progresión geométrica que sigue la recompensa. 
+
+\begin{defi}
+Una progresión geométrica es una sucesión construida de forma recursiva como:
+\begin{align*}
+&x_0=a\in\R\\
+&x_n=rx_{n+1}, r\in\R .
+\end{align*}
+En el caso de las recompensas por minar Bitcoin, $r=\frac{1}{2}$ y $r=50\cdot 210000$ (el total de Bitcoins emitidos mientras la recompensa era de 50 BTC). La suma de una progresión geométrica en la que $0<r<r$ tiene la siguiente fórmula que no vamos a probar:
+\[
+\sum_{n=0}^{+\infty}x_n=\frac{a}{1-r}
+\]
+\end{defi}
+
+
+
+
+
+
+
+
+
 Extras: Bitcoin es anónimo. Si sabes esconder tu IP (por ejemplo usando TOR), lo único que necesitas es usar la clave pública. Además, puedes incluso generar una nueva clave pública para cada transacción. Simplemente pulsando un botón en tu cartera puedes generar una nueva clave pública y privada.
 
 
@@ -304,6 +330,7 @@ Extras: Bitcoin es anónimo. Si sabes esconder tu IP (por ejemplo usando TOR), l
 \bibitem{Eric} Eric Rywalder, \textit{The math behind Bitcoin}, Coindesk, 2014.\\ \url{http://www.coindesk.com/math-behind-bitcoin/}
 \bibitem{Alex} Alex Gorale, \textit{Explaining the math behind Bitcoin.} Cryptocoinsnews, 2014.\\ \url{https://www.cryptocoinsnews.com/explaining-the-math-behind-bitcoin/}
 \bibitem{youtube} Scott Driscoll, \textit{How Bitcoin works under the hood}. ImponderableThings, 2013. \url{http://www.imponderablethings.com/2013/07/how-bitcoin-works-under-hood.html}
+\bibitem{Halving} Bitcoin Forum, \url{https://bitcointalk.org/index.php?topic=1473285.0}
 \end{thebibliography}
 
 
