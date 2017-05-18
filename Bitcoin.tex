@@ -124,12 +124,20 @@ Se puede conseguir este tipo de dinero intercambiándolo por bienes y servicios 
 
 \subsection{Funciones hash.}
 \begin{defi}
-Una \textbf{función hash} es una función que recibe datos de tamaño arbitrario y devuelve datos de tamaño fijo (generalmente 40 caracteres). En particular permiten recibir cadenas de texto de longitud arbitraria devolviendo siempre una cadena de texto del mismo tamaño. En criptografía se exige que estas funciones sean \emph{one way}. Al texto recibido se le suele llamar \textbf{input} o \textbf{mensaje}, mientras que el texto devuelto se puede llamar \textbf{output} o \textbf{digest}.
+\begin{defi}
+Para un $n$ fijo, llamamos \textbf{función hash} a una función $h : \mathcal{M} \to (\mathbb{F}_2)^n$ tal que:
+\begin{itemize}
+	\item $h$ es resistente a preimagen: Dado $y=h(x)$ es computacionalmente infactible calcular $x$ (es \emph{one way}).
+	\item $h$ es resistente a colisiones: Es computacionalmente infactible calcular $x$ y $x'$ con $h(x) = h(x')$
+	\item $h$ es resistente a segunda preimagen: Dado $y=h(x)$, es computacionalmente infactible calcular $x'$ con $h(x')=y$.  
+\end{itemize}
+\end{defi}
+Al texto recibido se le suele llamar \textbf{input} o \textbf{mensaje}, mientras que el texto devuelto se puede llamar \textbf{output} o \textbf{digest}. Normalmente el digest se expresa en hexadecimal con 40 caracteres. 
 \end{defi}
 Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, cuya salida es de 160 bits, para tener una probabilidad de tener una colisión de $\frac{1}{2}$ necesitaríamos $1.24\cdot 10^{24}$ elementos.
 
 Estas funciones tienen la propiedad de que un pequeño cambio en el mensaje recibido genera una salida totalmente distinta, lo que las vuelve impredecibles, como podemos observar en el siguiente ejemplo.
-	\newpage
+	
 \begin{ej}\
 En este ejemplo vemos el funcionamiento de la función SHA1. 
 \begin{figure}[h!]
@@ -167,7 +175,7 @@ En el caso de que queramos sumar un punto $P$ consigo mismo debemos hacer la ope
 \includegraphics[scale=0.4]{pmasp}
 \end{figure}
 
-Como elemento neutro deberemos considerar al punto del infinito de la curva. Se puede observar que el inverso de un punto sería su simétrico con respecto al eje de abscisas. De forma natural se define el producto por escalar $\alpha P$ siempre que $\alpha\in\Z$ como la suma de $\alpha$ veces $P$ (o de su inverso si $\alpha<0$).
+Como elemento neutro deberemos considerar al punto del infinito de la curva. Se puede observar que el inverso de un punto sería su simétrico con respecto al eje de abscisas. De forma natural se define el producto por escalar $\alpha P$ siempre que $\alpha\in\Z$ como la suma de $\alpha$ veces $P$ (o de su inverso si $\alpha<0$). Estas propiedades dotan a las curvas elípticas estructura de grupo.
 
 \subsubsection{Curvas elípticas sobre cuerpos finitos.} 
 Realmente Bitcoin no usa la curva anterior sobre $\R$ tal como la hemos dibujado, sino sobre un cuerpo finito módulo $2^{256} – 2^{32} – 2^9 – 2^8 – 2^7 – 2^6 – 2^4 - 1$, que es primo. Además se selecciona un punto base para hacer las operaciones que tiene como orden un primo lo suficientemente grande. Tanto estos parámetros como la curva son los mismos para todos los usuarios. Por tener visualizar qué aspecto tiene una curva elíptica sobre un cuerpo finito, observémos este ejemplo en el que se toma como primo el número $67$:
@@ -238,17 +246,41 @@ En Bitcoin, tanto el punto base como su orden se representan como un \emph{strin
 \item Orden:  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
 \end{itemize}
 
-Así pues, las claves también se representarán de este modo. Ahora que ya tenemos las claves, podemos empezar a firmar. En el funcionamiento real, los datos que se van a firmar se pasan por una función hash para que tengan el mismo número de bits (256) que el orden de $P$. Sin embargo, por simplicidad, nos saltaremos ese paso. Sea pues $P$ el punto base, $N$ su orden, $x$ la clave privada y $z$ un número entero que representa los datos que vamos a firmar. El algoritmo de la firma digital consiste en lo siguiente:
+Así pues, las claves también se representarán de este modo. Ahora que ya tenemos las claves, podemos empezar a firmar. En el funcionamiento real, los datos que se van a firmar se pasan por una función hash para que tengan el mismo número de bits (256) que el orden de $P$. Sin embargo, por simplicidad, nos saltaremos ese paso. Sea pues $P$ el punto base, $N$ su orden, $x$ la clave privada, $m$ un mensaje que vamos a firmar y $h$ una función hash que se usa para que el mensaje tenga el mísmo número de bits (256) que el orden de $P$. El algoritmo de la firma digital consiste en lo siguiente:
 \begin{enumerate}
+\item Calcular $e=h(m)$.
+\item Sea $z$ el conjunto de $l$ dígitos más a la izquierda de $e$, donde $l$ es la longitud en bits de $N$.
 \item Elegir un número entero aleatorio $k\in\{1,\dots,N-1\}$.
-\item Clacular el punto $(a,b)=k*P$ usando la multiplicación por escalar de la curva elíptica. 
-\item Encontrar $r= a\mod N$. Si $r=0$, vuelta al paso 1.
-\item Encontrar $s= (z+r*x)k^{-1}\mod N$. Si $s=0$, vuelta al paso 1. 
+\item Calcular el punto $(a,b)=kP$ usando la multiplicación por escalar de la curva elíptica. 
+\item Encontrar $r\equiv a\mod N$. Si $r=0$, vuelta al paso 1.
+\item Encontrar $s\equiv (z+rx)k^{-1}\mod N$. Si $s=0$, vuelta al paso 1. 
 \item La firma es el par $(r,s)$. 
 \end{enumerate}
 
-Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada, ya que el resto de datos son conocidos. Para ver ejemplos consultar \cite{Eric}.
+Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada\footnote{Un error de este tipo fue usado en 2010 para extraer las claves de PS3 \url{https://nakedsecurity.sophos.com/2012/10/25/sony-ps3-hacked-for-good-master-keys-revealed/}}, ya que el resto de datos son conocidos. Dadas dos firmas $(r,s)$ y $(r,s')$ en las que se ha utilizado la misma $k$ para dos mensajes conocidos $m$ y $m'$, un atacante puede utilizar la ecuación en el paso 6 para calcular $k$, ya que $s-s'\equiv k^{-1}(z-z')\mod N$, El atacante puede hallar entonces $k=\frac{z-z'}{s-s'}\mod N$. Como $s=k^{-1}(z+rx)$, ahora puede calcular la clave de privada $x=\frac{sk-z}{r}\mod N$. 
 
+Al igual que las claves, la firma se suele expresar en hexadecimal, pero a la hora de hacer los cálculos deben ser expresados como enteros. Para ver ejemplos consultar \cite{Eric}.
+
+Llegado a este punto tenemos unos datos y una firma. Otra persona que tenga nuestra clave pública puede recibir los datos y la la clave pública y verificar que somos nosotros quienes lo enviamos. Veamos cómo se consigue.
+
+Sea $Y$ la clave pública y el resto de variables definidas como antes. En primer lugar se debe verificar que la clave pública es válida de la siguiente forma:
+\begin{enumerate}
+\item Comprobar que $Y$ no es el punto base.
+\item Comprobar que $Y$ es un punto de la curva.
+\item Comprobar que el orden de $Y$ es $N$.
+\end{enumerate}
+Una vez hecho esto, los pasos para verificar la firma son los siguientes: 
+\begin{enumerate}
+\item Verificar que $1\leq r,s\leq N-1$. En caso contrario la firma no es válida.
+\item Calcular $e=h(m)$ con la misma función hash de antes.
+\item Tomar $z$ como los $l$ bits más a la izquierda de $e$ del mismo modo que antes.
+\item Calcular $w\equiv s^{-1}\mod N$.
+\item Calcular $u\equiv zw\mod N$ y $v\equiv rw\mod N$. 
+\item Calcular el punto $(a,b)=uP+vY$.
+\item Verificar que $r\equiv a\mod N$. La firma es inválida en caso contrario.
+\end{enumerate}
+
+No es evidente que esta verificación realmente funcione, pero podemos probarlo. Denotemos $C=uP+vY$. Como $Y=xP$ obtenemos $$C=(u+vx)P.$$ Sustituyendo los valores de $u$ y $v$, y luego el de $w$: $$ C=(zw+rwx)P= (z+rx)s^{-1}P.$$ Introducimos ahora la definición de $s$: $$C=(z+rx)(z+rx)^{-1}(k^{-1})^{-1}P=kP.$$ Por la definiciíon de $r$ esto constituye la verificación. Por ello solo mensajes correctos serán verificados correctamente. 
 \subsection{Blockchain, afianzamiento y minería.}
 
 Comenzamos esta sección definiendo un concepto al que nos hemos referido varias veces y que es fundamental tanto en Bitcoin como en otras aplicaciones que han ido surgiendo a raíz del éxito de esta moneda. 
