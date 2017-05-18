@@ -54,7 +54,7 @@
 \newtheorem{notas}[teorema]{Notas}
 \newtheorem*{dem}{Demostración}
 \newtheorem{ejer}[teorema]{Ejercicio}
-\newtheorem{consec}[teorema]{Consecuencia}
+\newtheorem{problem}[teorema]{Problema}
 \newtheorem{concl}[teorema]{Conclusión}
 
 \providecommand{\abs}[1]{\lvert#1\rvert}
@@ -292,6 +292,7 @@ Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro d
 \captionsetup{labelformat=empty}
  \caption{La blockchain es una red distribuida, ni centralizada ni descentralizada.}
 \end{figure}
+
 Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir información -no se puede quitar ni modificar nada-. 
 
 Los nuevos \textbf{bloques} que se van añadiendo contienen todas las transacciones que se han hecho desde que se añadió el bloque anterior. Cada bloque tiene un puntero que apunta al bloque anterior, formando así una cadena, y un valor de \textit{nonce} (número aleatorio o pseudo-aleatorio de un solo uso) para crear bloques nuevos. ¿Pero cómo se generan estos bloques? Gracias a los mineros.
@@ -344,6 +345,8 @@ ligeros como, por ejemplo, dispositivos móviles. En Febrero de 2014, después d
  \caption{Evolución del peso en MB de la blockchain de BTC.}
 \end{figure}
 
+Aunque de momento no se ha implementado ninguna solucion, se discute activamente la posibilidad de incorporar un algoritmo de poda de la cadena, de manera que no sea necesario guardar todas las transacciones. Así, transacciones antiguas podrían ser eliminadas, guardando de ellas solo su hash, para preservar la integridad de la cadena.
+\newpage
 \subsection{Halving}
 El sistema de Bitcoin ha sido diseñado de modo que la recompensa por minar se reduce a la mitad cada 210000 bloques. Este proceso se conoce como \textbf{Halving} o \textbf{Halvening}. Cuando el bloque 0 (conocido como \emph{bloque génesis}) fue minado a principios de 2009 la recompensa fue de 50 BTC. El primer Halving tuvo lugar a finales de 2012, con lo que la recompensa fue de 25 BTC. El último Halvening se produjo en 2016, por lo que actualmente la recompensa es de 12,5 BTC. 
 
@@ -376,12 +379,15 @@ Un bloque cada 10 minutos supone unos 144 bloques por día. Así que el tiempo p
 
 \vspace{5cm}
 
-
+\newpage
 \section{Problema de los generales bizantinos}
+El problema de los generales bizantinos es un experimento mental creado para ilustrar el dilema de lograr un consenso entre un conjunto de entidades con un objetivo común cuando entre ellas pueden existir traidores, es decir, entidades con objetivos opuestos que intenten dinamitar el proceso. Ademas, se supone que las comunicaciones entre dichas entidades son limitadas e inseguras. 
+\begin{problem}
+El problema se presenta como una analogía con un escenario de guerra, donde un grupo de generales bizantinos se encuentran acampados con sus tropas alrededor de una ciudad enemiga que desean atacar. Después de observar el comportamiento del enemigo, los generales deben comunicar sus observaciones y ponerse de acuerdo en un plan de batalla común que permita atacar la ciudad y vencer. Para ello, los generales se comunican únicamente a través de mensajeros. 
 
-
-
-
+Existe la posibilidad que algunos de los generales sean traidores y, por lo tanto, decidan enviar mensajes con información errónea con el objetivo de confundir a los generales leales. Un algoritmo que solucione el problema debe asegurar que todos los generales leales acuerdan un mismo plan de accion y que unos pocos traidores no pueden conseguir que el plan adoptado por los generales leales sea equivocado.
+\end{problem}
+El desarrollo que hemos efectuado acerca de la blockchain su tecnología impide que una persona o un grupo pueda crear bloques falsos es considerada como la primera solución práctica al problema.
 
 
 \addcontentsline{toc}{section}{Bibliografía}
