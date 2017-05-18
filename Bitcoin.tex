@@ -215,7 +215,7 @@ Cada input debe usarse completamente, por lo que si se desea enviar una cantidad
 
 A través de estas referencias a transacciones pasadas, la propiedad de Bitcoins se basa en una cadena de transacciones (veremos más adelante que es la cadena de bloques). Al instalar por primera vez un monedero de Bitcoin, el software comprueba automáticamente todas las transacciones anteriores para asegurarse de tener un registro fidedigno.
 
-Una vez que una transacción ha sido usada como referencia se considera gastada y no puede volverse a usar. De otro modo podría cometer doble gasto aludiendo a la misma transacción varias veces. Por lo tanto, al validar una transacción también se comprueba que las transacciones no habían sido usadas antes. Debido a que las transacciones en la red de Bitcoin se cuentan por decenas de millones, se aligera el proceso mediante un índice de transacciones no usadas. En definitiva, tener Bitcoins significa que hay una lista de transacciones que apuntan a tu dirección y que no han sido gastadas.
+Una vez que una transacción ha sido usada como referencia se considera gastada y no puede volverse a usar. De otro modo podría cometer \textbf{doble gasto} aludiendo a la misma transacción varias veces. Por lo tanto, al validar una transacción también se comprueba que las transacciones no habían sido usadas antes. Debido a que las transacciones en la red de Bitcoin se cuentan por decenas de millones, se aligera el proceso mediante un índice de transacciones no usadas. En definitiva, tener Bitcoins significa que hay una lista de transacciones que apuntan a tu dirección y que no han sido gastadas.
 
 Ahora que hemos dejado clara la idea general de cómo se produce una transacción, volvamos a la operación que quería realizar Alice. Sean $(PK_A,SK_A)$ y $(PK_B,SK_B)$ los pares de calve pública-privada de Alice y Bob respectivamente. La función $Add(PK)$ nos devuelve la dirección generada a partir de la clave pública $PK$ aplicándole una función hash y añadiéndole delante un $1$ o un $3$ (esto se hace simplemente para indentificarlo como dirección pública de Bitcoin). Además será necesaria una firma digital, que explicaremos posteriormente, y que denotaremos $Sign_{SK}(m)$ donde $m$ representa la transacción (ya que esta firma varía en cada transacción). Sea $H$ una función hash. Supongamos que Alice ya había recibido la cantidad de $5$ BTC en una transacción $T_0$ a su dirección, $Add(PK_A)$.  Como hemos explicado antes, $T_0=\{input_0, output_0\}$. En este caso $input_0$ sería el registro anterior de transacciones y $output_0=\{Add(PK_A),5\}$. 
 
@@ -242,7 +242,7 @@ Debido a la complejidad computacional de la suma en curvas elípticas, es factib
 
 En Bitcoin, tanto el punto base como su orden se representan como un \emph{string} hexadecimal. Concretamente:
 \begin{itemize}
-\item Punto base: B04 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 59F2815B 16F81798 483ADA77 26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419 9C47D08F FB10D4B8
+\item Punto base: B04 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 \\59F2815B 16F81798 483ADA77  26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419 \\ 9C47D08F FB10D4B8
 \item Orden:  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
 \end{itemize}
 
@@ -287,43 +287,65 @@ Comenzamos esta sección definiendo un concepto al que nos hemos referido varias
 \begin{defi}
 Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro de contabilidad de Bitcoin, es decir, como el registro de cada transacción que se ha hecho desde que se creó Bitcoin. Este registro único se genera, distribuye y almacena de forma distribuida, de modo que todos los nodos están de acuerdo en su contenido sin la posibilidad de ser intervenido de ninguna forma. 
 \end{defi}
+\begin{figure}[h]
+\includegraphics[scale=0.45]{distrib}
+\captionsetup{labelformat=empty}
+ \caption{La blockchain es una red distribuida, ni centralizada ni descentralizada.}
+\end{figure}
+Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir información -no se puede quitar ni modificar nada-. 
 
-Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir informaión -no se puede quitar ni modificar nada-. Los nuevos \textbf{bloques} que se van añadiendo contienen todas las transacciones que se han hecho desde que se añadió el bloque anterior. Cada bloque tiene un puntero que apunta al bloque anterior, formando así una cadena, y un valor de \textit{nonce} (número aleatorio o pseudo-aleatorio de un solo uso) para crear bloques nuevos. ¿Pero cómo se generan estos bloques? Gracias a los mineros.
+Los nuevos \textbf{bloques} que se van añadiendo contienen todas las transacciones que se han hecho desde que se añadió el bloque anterior. Cada bloque tiene un puntero que apunta al bloque anterior, formando así una cadena, y un valor de \textit{nonce} (número aleatorio o pseudo-aleatorio de un solo uso) para crear bloques nuevos. ¿Pero cómo se generan estos bloques? Gracias a los mineros.
 \begin{defi}
-Los \textbf{mineros} son aquellos usuarios que se dedican a validar las transacciones mediante una red P2P (abreviatura de \emph{peer-to-peer}, esto es, una red en la que todos los nodos tienen la misma importancia) y creando nuevos bloques con las transacciones validadas. Cualquier usuario puede ser minero y por cada bloque generado se recibe un premio en forma de bitcoins. 
+Los \textbf{mineros} son los usuarios que se dedican a validar las transacciones mediante una red P2P (abreviatura de \emph{peer-to-peer}, esto es, una red en la que todos los nodos tienen la misma importancia) y creando nuevos bloques con las transacciones validadas. Cualquier usuario puede ser minero y por cada bloque generado se recibe un premio en forma de bitcoins. El nombre es por analogía con el oro.
 \end{defi}
-Los Bitcoins se crean a partir de un tipo de transacción especial, la transacción de generación, que se incluye en cada bloque. Dicha transacción tiene una dirección de destino (que pertenece al minero que se ha generado el bloque) pero no tiene ninguna dirección de origen. Actualmente, pues como veremos esta cantidad va decreciendo, se premia $12.5$ BTC al minero o pool (agrupación de mineros que trabaja en conjunto) que resuelve el bloque. Más adelante explicaremos en profundidad en qué consiste la minería.
+Los Bitcoins se crean a partir de un tipo de transacción especial, la transacción de generación, que se incluye en cada bloque. Dicha transacción tiene una dirección de destino (que pertenece al minero que se ha generado el bloque) pero no tiene ninguna dirección de origen. 
+
+Actualmente, pues como veremos esta cantidad va decreciendo, se premia $12.5$ BTC al minero o pool (agrupación de mineros que trabaja en conjunto) que resuelve el bloque. Más adelante explicaremos en profundidad en qué consiste la minería.
 
 Resumiendo, el funcionamiento básico de Bitcoin se basa en las transacciones. Estas se envían de una dirección a otra a través de los nodos, que son los encargados de validar -mediante los mineros- las transacciones y almacenarlas en la blockchain. Ahora explicaremos todas estas funciones de forma detenida.
 
-
-Ademas de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida (a través de una red de nodos P2P) en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
+Ademas de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
 \begin{defi} Un \textbf{sistema de prueba de trabajo} o \textbf{POW} es un sistema que requiere que el cliente del servicio realice algún tipo de trabajo que tenga cierto coste y que es verificado fácilmente en la parte del servidor. Normalmente el trabajo consiste en realizar un cómputo en el ordenador del cliente. En el caso de Bitoin, el sistema de prueba de trabajo permite la transferencia de valor de manera directa entre los participantes de una transacción sin necesidad de depender de ninguna organización central de confianza. 
 \end{defi}
-De este modo, mientras el poder computacional de la red esté distribuido, un grupo pequeño de mineros traidore no podrá modificar la cadena de bloques en su beneficio. Esta validación puede ocurrir simultáneamente con varios bloques, en cuyo caso se formaría una rama y se continúa a partir del bloque que llega primero.
+Esta validación puede ocurrir simultáneamente con varios bloques, en cuyo caso se formaría una rama y se continúa a partir del bloque que llega primero.
 \begin{figure}[h!]
 \includegraphics[scale=0.45]{rama}
 \end{figure}
 
 ¿En qué consiste dicha prueba? La prueba de trabajo que utiliza Bitcoin consiste en encontrar un valor de nonce para el nuevo bloque de tal manera que el
-hash del bloque sea inferior a un valor objetivo fijado ($H(B) < t$). Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. 
+hash del bloque sea inferior a un valor objetivo fijado. Si H es la función hash, lo que un minero es buscar un valor de un nonce tal que:
+\[
+H(H(Data+Nonce)) < Dif
+\]
+La dificultad es un valor que se ajusta en función de la capacidad computacional de la red. Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para anular transacciones, ya sea para tener control de lo que se anota en el registro común, necesitará un poder computacional superior al $50\%$ de la red.
+
+La red computacional de Bitcoin es la más potente que existe en el mundo, por encima de Google o la NSA.
 \begin{figure}[h!]
 \includegraphics[scale=0.15]{grafica}
 \captionsetup{labelformat=empty}
- \caption{La gráfica RX 480 8GB GDDR5 permite minar a  29 MH/s}
+ \caption{La gráfica RX 480 8GB GDDR5 permite minar a  29 MH/s.}
 \end{figure}
 
-La resolución de un bloque ocurre, más o menos, cada diez minutos. Esta red computacional es la más potente que existe hoy día, por encima de Google o la NSA.
-un valor de nonce para el bloque B de tal manera que , es decir, que el hash del bloque sea inferior al objetivo
-fijado. El valor objetivo no es constante, y permite adaptar la dificultad de la prueba al poder de computo de la red en cada momento, con el propósito de generar un nuevo bloque cada 10 minutos. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para dar marcha atras y anular transacciones  que ha realizado, ya sea para tener control de lo que se anota en el registro comun, ser  a necesario que  este disponga de 
-un poder de computo superior al  50  de la red4 . En caso contrario, si el atacante intenta modificar la cadena de bloques
-generando sus propias alternativas, no tendra suficiente poder 
-de computo como para generar bloques más r  apido que el 
-resto de la red, por lo que su rama no sera la m  as larga, y 
-sera descartada. 
+
+\begin{figure}[h]
+\includegraphics[scale=0.45]{distribution}
+\captionsetup{labelformat=empty}
+ \caption{La resolución de un bloque ocurre, más o menos, cada diez minutos.}
+\end{figure}
+
+\newpage
 \subsection{Almacenamiento}
-\subsection{Halving (J)}
-El sistema de Bitcoin ha sido diseñado de modo que la recompensa por minar se reduce a la mitad cada 210000 bloques. Este proceso se conoce como \textbf{Halving} o \textbf{Halvening}. Cuando el bloque 0 (conocido como \emph{bloque génesis}) fue minado a principios de 2009 la recompensa fue de 50 BTC. El primer Halving tuvo lugar a finales de 2012, con lo que la recompensa fue de 25 BTC. El último Halvening se produjo en 2016, por lo que actualmente la recompensa es de 12,5 BTC.  
+Como hemos visto cuando hemos hablado acera de la blockchain, el almacenaje de la cadena de bloques se lleva a cabo con mucha redundancia pues todos los nodos completos de la red contienen una copia entera de la cadena de bloques (y sus transacciones). Esto permite a estos nodos validar de manera
+correcta cada nueva transacción. Tener que mantener una copia completa de la cadena puede suponer un problema para los nodos operando en dispositivos
+ligeros como, por ejemplo, dispositivos móviles. En Febrero de 2014, después de 5 años de operaciones con Bitcoin, la cadena de bloques ocupaba unos 13 GB. El día 17 de Mayo de 2017 ocupaba 115 GB.
+\begin{figure}[h]
+\includegraphics[scale=0.45]{captura}
+\captionsetup{labelformat=empty}
+ \caption{Evolución del peso en MB de la blockchain de BTC.}
+\end{figure}
+
+\subsection{Halving}
+El sistema de Bitcoin ha sido diseñado de modo que la recompensa por minar se reduce a la mitad cada 210000 bloques. Este proceso se conoce como \textbf{Halving} o \textbf{Halvening}. Cuando el bloque 0 (conocido como \emph{bloque génesis}) fue minado a principios de 2009 la recompensa fue de 50 BTC. El primer Halving tuvo lugar a finales de 2012, con lo que la recompensa fue de 25 BTC. El último Halvening se produjo en 2016, por lo que actualmente la recompensa es de 12,5 BTC. 
 
 En la introducción comentamos que la cantidad de Bitcoin que se podrá minar es fija (concretamente 21 millones de BTC), y aunque el motivo de trasfondo es puramente económico, está directamente relacionado con el Halving. La explicación se encuentra en la progresión geométrica que sigue la recompensa. 
 
@@ -355,8 +377,8 @@ Un bloque cada 10 minutos supone unos 144 bloques por día. Así que el tiempo p
 \vspace{5cm}
 
 
+\section{Problema de los generales bizantinos}
 
-Extras: Bitcoin es anónimo. Si sabes esconder tu IP (por ejemplo usando TOR), lo único que necesitas es usar la clave pública. Además, puedes incluso generar una nueva clave pública para cada transacción. Simplemente pulsando un botón en tu cartera puedes generar una nueva clave pública y privada.
 
 
 
