@@ -257,7 +257,7 @@ Así pues, las claves también se representarán de este modo. Ahora que ya tene
 \item La firma es el par $(r,s)$. 
 \end{enumerate}
 
-Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada\footnote{Un error de este tipo fue usado en 2010 para extraer las claves de PS3 \url{https://nakedsecurity.sophos.com/2012/10/25/sony-ps3-hacked-for-good-master-keys-revealed/}}, ya que el resto de datos son conocidos. Dadas dos firmas $(r,s)$ y $(r,s')$ en las que se ha utilizado la misma $k$ para dos mensajes conocidos $m$ y $m'$, un atacante puede utilizar la ecuación en el paso 6 para calcular $k$, ya que $s-s'\equiv k^{-1}(z-z')\mod N$, El atacante puede hallar entonces $k=\frac{z-z'}{s-s'}\mod N$. Como $s=k^{-1}(z+rx)$, ahora puede calcular la clave de privada $x=\frac{sk-z}{r}\mod N$. 
+Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada\footnote{Un error de este tipo fue usado en 2010 para extraer las claves de PS3 \url{https://nakedsecurity.sophos.com/2012/10/25/sony-ps3-hacked-for-good-master-keys-revealed/}}, ya que el resto de datos son conocidos. Dadas dos firmas $(r,s)$ y $(r,s')$ en las que se ha utilizado la misma $k$ para dos mensajes conocidos $m$ y $m'$, un atacante puede utilizar la ecuación en el paso 6 para calcular $k$, ya que $s-s'\equiv k^{-1}(z-z')\mod N$, El atacante puede hallar entonces $k=\frac{z-z'}{s-s'}\mod N$. Como $s=k^{-1}(z+rx)\mod N$, ahora puede calcular la clave de privada $x=\frac{sk-z}{r}\mod N$. 
 
 Al igual que las claves, la firma se suele expresar en hexadecimal, pero a la hora de hacer los cálculos deben ser expresados como enteros. Para ver ejemplos consultar \cite{Eric}.
 
