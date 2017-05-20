@@ -344,8 +344,7 @@ ligeros como, por ejemplo, dispositivos móviles. En Febrero de 2014, después d
 \captionsetup{labelformat=empty}
  \caption{Evolución del peso en MB de la blockchain de BTC.}
 \end{figure}
-
-Aunque de momento no se ha implementado ninguna solucion, se discute activamente la posibilidad de incorporar un algoritmo de poda de la cadena, de manera que no sea necesario guardar todas las transacciones. Así, transacciones antiguas podrían ser eliminadas, guardando de ellas solo su hash, para preservar la integridad de la cadena.
+Aunque de momento no se ha implementado ninguna solución, se discute activamente la posibilidad de incorporar un algoritmo de poda de la cadena, de manera que no sea necesario guardar todas las transacciones. Así, transacciones antiguas podrían ser eliminadas, guardando de ellas solo su hash, para preservar la integridad de la cadena.
 \newpage
 \subsection{Halving}
 El sistema de Bitcoin ha sido diseñado de modo que la recompensa por minar se reduce a la mitad cada 210000 bloques. Este proceso se conoce como \textbf{Halving} o \textbf{Halvening}. Cuando el bloque 0 (conocido como \emph{bloque génesis}) fue minado a principios de 2009 la recompensa fue de 50 BTC. El primer Halving tuvo lugar a finales de 2012, con lo que la recompensa fue de 25 BTC. El último Halvening se produjo en 2016, por lo que actualmente la recompensa es de 12,5 BTC. 
@@ -387,8 +386,26 @@ El problema se presenta como una analogía con un escenario de guerra, donde un 
 
 Existe la posibilidad que algunos de los generales sean traidores y, por lo tanto, decidan enviar mensajes con información errónea con el objetivo de confundir a los generales leales. Un algoritmo que solucione el problema debe asegurar que todos los generales leales acuerdan un mismo plan de accion y que unos pocos traidores no pueden conseguir que el plan adoptado por los generales leales sea equivocado.
 \end{problem}
-El desarrollo que hemos efectuado acerca de la blockchain su tecnología impide que una persona o un grupo pueda crear bloques falsos es considerada como la primera solución práctica al problema.
+El desarrollo que hemos efectuado acerca de la blockchain su tecnología impide que una persona o un grupo pueda crear bloques falsos es considerada como la primera solución práctica al problema. 
 
+\newpage 
+\section{Apliaciones de la blockchain}
+\begin{itemize}
+\item \textbf{Gestión de identidades}. La tecnología blockchain permite a los usuarios crear su propia identidad digital a prueba de manipulación. Según los expertos, esta especie de ID basado en blockchain reemplazará pronto a los nombres de usuario y contraseñas en línea.
+
+Podremos utilizar nuestra identidad blockchain para acceder a aplicaciones y sitios web, firmar documentos digitales, etc. Ya hay algunas compañías que ofrecen este tipo de servicios, como: Onename, Keybase o ShoCard.
+
+\item \textbf{Alquiler de propiedades y economía colaborativa}. El sistema anterior se puede hacer aún más complejo combinándolo con un contrato inteligente de alquiler. Por ejemplo, si un propietario de un piso o un vehículo quiere alquilarlo, bastaría con elaborar y almacenar en la blockchain un contrato inteligente en el que el propietario fija un precio para el alquiler por un tiempo.
+
+En el momento en que el usuario realiza el pago con una transacción registrada en la blockchain, el contrato inteligente se ejecutaría permitiendo el acceso a la propiedad a dicho usuario concreto por el tiempo estipulado. Una compañía que ofrece este tipo de servicios es Slock.
+
+\item\textbf{Votar por Internet}. La blockchain resuelve uno de los grandes problemas de los sistemas de votación por Internet: el anonimato del voto.
+
+Por su propia estructura y funcionamiento, la blockchain puede garantizar que una persona no pueda votar más de una vez en una misma elección, al tiempo que garantiza la privacidad de su voto. Además, al no haber ninguna autoridad central que gestione la votación no es posible manipularla.
+
+El voto electrónico mejoraría la rapidez y abarataría considerablemente el coste de unas elecciones y referendums, lo que permitiría hacer referendums con más frecuencia y mejorar así la democracia.
+
+\end{itemize}
 
 \addcontentsline{toc}{section}{Bibliografía}
 \newpage
