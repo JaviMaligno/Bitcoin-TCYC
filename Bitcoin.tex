@@ -230,7 +230,7 @@ Veamos por qué aparece cada uno de los términos en el $input_1$. En primer lug
 
 En el $output_1$ simplemente se indica a quién va dirigida la cantidad que se especifica, de forma que solo Bob podrá gastar esta cantidad en transacciones posteriores. Bob puede verificar que le han sido transferidos los fondos comprobando que $Add(PK_A)$ coincide con la dirección de destino de $T_0$ y también que la firma es correcta $Sign_{SK_A}(T_0+input)$ usando $PK_A$. 
 
-Nos queda pendiente mostrar cómo se calcula la firma digital.
+Bitcoin permite realizar operaciones más complejas, como transacciones que requieren varias claves privadas, pero la base de todo es lo que hemos explicado. Nos queda pendiente mostrar cómo se calcula la firma digital.
 
 \subsubsection{Algoritmo de firma digital en curvas elípticas. }
 
@@ -287,11 +287,6 @@ Comenzamos esta sección definiendo un concepto al que nos hemos referido varias
 \begin{defi}
 Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro de contabilidad de Bitcoin, es decir, como el registro de cada transacción que se ha hecho desde que se creó Bitcoin. Este registro único se genera, distribuye y almacena de forma distribuida, de modo que todos los nodos están de acuerdo en su contenido sin la posibilidad de ser intervenido de ninguna forma. 
 \end{defi}
-\begin{figure}[h]
-\includegraphics[scale=0.45]{distrib}
-\captionsetup{labelformat=empty}
- \caption{La blockchain es una red distribuida, ni centralizada ni descentralizada.}
-\end{figure}
 
 Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir información -no se puede quitar ni modificar nada-. 
 
@@ -299,13 +294,20 @@ Los nuevos \textbf{bloques} que se van añadiendo contienen todas las transaccio
 \begin{defi}
 Los \textbf{mineros} son los usuarios que se dedican a validar las transacciones mediante una red P2P (abreviatura de \emph{peer-to-peer}, esto es, una red en la que todos los nodos tienen la misma importancia) y creando nuevos bloques con las transacciones validadas. Cualquier usuario puede ser minero y por cada bloque generado se recibe un premio en forma de bitcoins. El nombre es por analogía con el oro.
 \end{defi}
+
+\begin{figure}[h]
+\includegraphics[scale=0.45]{distrib}
+\captionsetup{labelformat=empty}
+ \caption{La red P2P es una red distribuida, ni centralizada ni descentralizada.}
+\end{figure}
+
 Los Bitcoins se crean a partir de un tipo de transacción especial, la transacción de generación, que se incluye en cada bloque. Dicha transacción tiene una dirección de destino (que pertenece al minero que se ha generado el bloque) pero no tiene ninguna dirección de origen. 
 
 Actualmente, pues como veremos esta cantidad va decreciendo, se premia $12.5$ BTC al minero o pool (agrupación de mineros que trabaja en conjunto) que resuelve el bloque. Más adelante explicaremos en profundidad en qué consiste la minería.
 
-Resumiendo, el funcionamiento básico de Bitcoin se basa en las transacciones. Estas se envían de una dirección a otra a través de los nodos, que son los encargados de validar -mediante los mineros- las transacciones y almacenarlas en la blockchain. Ahora explicaremos todas estas funciones de forma detenida.
+Como hemos visto antes, el funcionamiento básico de Bitcoin se basa en las transacciones. Estas se envían de una dirección a otra a través de los nodos, que son los encargados de validar -mediante los mineros- las transacciones y almacenarlas en la blockchain. Ahora explicaremos todas estas funciones de forma detenida.
 
-Ademas de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
+Además de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
 \begin{defi} Un \textbf{sistema de prueba de trabajo} o \textbf{POW} es un sistema que requiere que el cliente del servicio realice algún tipo de trabajo que tenga cierto coste y que es verificado fácilmente en la parte del servidor. Normalmente el trabajo consiste en realizar un cómputo en el ordenador del cliente. En el caso de Bitoin, el sistema de prueba de trabajo permite la transferencia de valor de manera directa entre los participantes de una transacción sin necesidad de depender de ninguna organización central de confianza. 
 \end{defi}
 Esta validación puede ocurrir simultáneamente con varios bloques, en cuyo caso se formaría una rama y se continúa a partir del bloque que llega primero.
@@ -318,9 +320,21 @@ hash del bloque sea inferior a un valor objetivo fijado. Si H es la función has
 \[
 H(H(Data+Nonce)) < Dif
 \]
-La dificultad es un valor que se ajusta en función de la capacidad computacional de la red. Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para anular transacciones, ya sea para tener control de lo que se anota en el registro común, necesitará un poder computacional superior al $50\%$ de la red.
+La dificultad es un valor que se ajusta en función de la capacidad computacional de la red. Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para anular transacciones, ya sea para tener control de lo que se anota en el registro común, necesitará un poder computacional superior al $50\%$ de la red. La red computacional de Bitcoin es la más potente que existe en el mundo, por encima de Google o la NSA.
 
-La red computacional de Bitcoin es la más potente que existe en el mundo, por encima de Google o la NSA.
+¿Y cómo varía la dificultad del problema? Como se busca un nonce tal que $H(H(Data+Nonce)) < Dif$, bastaré con fijar un valor de $Dif$ cada vez más pequeño. En la representación hexadecimal del hash (o en otra cualquiera) esto se consigue eligiendo una cadena de caracteres que empiece por una determinada cantidad de ceros. Cuantos más ceros, más pequeño es el valor, por lo que a grandes rasgos se trata de buscar el valor del nonce que te dé un hash con la cantidad buscada de ceros iniciales. 
+
+\begin{ej} Vamos a ver un ejemplo simplificado de cómo se construye un bloque. Para ello vamos a usar hashes reducidos, en lugar de los reales de 40 caracteres. Supongamos que el valor del hash del anterior bloque es $00000000000001adf44c7d69767585$ (comienza con 13 ceros). Consideremos dos hashes de transacciones esperando a ser incluidas en el bloque $5572eca4dd4$ y  $db7d0c0b845$. Por último sea el hash de la transacción por la cual el minero intenta recibir recompensa $916d849af76$. El nuevo bloqué tendrá todos los hashes mencionados de la siguiente forma: 
+$$00000000000001adf44c7d69767585--5572eca4dd4-db7d0c0b845-916d849af76--$$
+Solo falta completarlo con el valor adecuado de nonce. Por ejemplo empezamos con el valor $nonce=1$, con el que resultaría el bloque
+$$00000000000001adf44c7d69767585--5572eca4dd4-db7d0c0b845-916d849af76--1$$
+Al aplicarle el hash nos da como resultado 
+$$8b9b994dcf57f8f90194d82e234b72ac$$
+que no puede ser válido porque tiene menos de de 13 ceros (ninguno de hecho). Podemos continuar probando hasta llegar al nonce adecuado. Si somos los primeros en encontrarlo, se añadirá nuestro bloque y recibiremos la recompensa.
+
+\end{ej}
+
+
 \begin{figure}[h!]
 \includegraphics[scale=0.15]{grafica}
 \captionsetup{labelformat=empty}
@@ -368,7 +382,7 @@ S=\sum_{n=0}^{+\infty}x_n=\frac{a}{1-r}.
 
 Aplicando esto a Bitcoin obtenemos precisamente $S=\frac{10500000}{\frac{1}{2}} = 21000000$. Nótese que la cantidad total de Bitcoin no llegará a ser exactamente 21 millones (concretamente será 20999999.97480000 BTC, esto es, 2520000 Satoshis menos de los 21 millones de BTC) pues la cantidad mínima con la que se puede recompensar es con $10^{-8}$ BTC = 1 Satoshi. De hecho se puede calcular cuándo se empezará a recompensar con 1 Satoshi, lo cual será al acanzar el bloque 6720000. Por lo tanto, a partir del bloque 6930000 no habrá recompensa en absoluto. Cuando ese momento llegue, no se crearán más Bitcoins y los mineros solo obtendrán beneficios a través de comisiones en las transacciones. Para entonces se espera que el valor del Bitcoin sea tan alto que estas comisiones sean más que suficientes para compensar a los mineros.\\
 
-No solo se conoce la cantidad máxima que habrá de Bitcoin, sino también cuándo se alcanzará esta cantidad. El sistema ha sido diseñado para que se produzca aproximadamente un bloque cada 10 minutos. Para ello, a medida que la capacidad computacional de la red aumenta, también se incrementa la dificultad de generar los bloques. ¿Por qué 10 minutos? En realidad esta cantidad es arbitraria y cada criptodivisa establece el suyo, pero tiempos demasiado cortos podrían generar inestabilidad y tiempos muy largos retrasarían las confirmaciones. 
+No solo se conoce la cantidad máxima que habrá de Bitcoin, sino también cuándo se alcanzará esta cantidad. Como hemos visto en la sección de minería, el sistema ha sido diseñado para que se produzca aproximadamente un bloque cada 10 minutos. Para ello, a medida que la capacidad computacional de la red aumenta, también se incrementa la dificultad de generar los bloques. ¿Por qué 10 minutos? En realidad esta cantidad es arbitraria y cada criptodivisa establece el suyo, pero tiempos demasiado cortos podrían generar inestabilidad y tiempos muy largos retrasarían las confirmaciones. 
 
 Un bloque cada 10 minutos supone unos 144 bloques por día. Así que el tiempo para alcanzar 6930000 se necesitan $\frac{6930000}{144} = 48125$ días, algo menos de 132 años. Esto quiere decir que en torno al año 2140 se habrán minado todos los Bitcoins previstos.
 
