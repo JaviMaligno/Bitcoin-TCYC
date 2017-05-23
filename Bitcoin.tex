@@ -178,7 +178,7 @@ En el caso de que queramos sumar un punto $P$ consigo mismo debemos hacer la ope
 Como elemento neutro deberemos considerar al punto del infinito de la curva. Se puede observar que el inverso de un punto sería su simétrico con respecto al eje de abscisas. De forma natural se define el producto por escalar $\alpha P$ siempre que $\alpha\in\Z$ como la suma de $\alpha$ veces $P$ (o de su inverso si $\alpha<0$). Estas propiedades dotan a las curvas elípticas estructura de grupo.
 
 \subsubsection{Curvas elípticas sobre cuerpos finitos.} 
-Realmente Bitcoin no usa la curva anterior sobre $\R$ tal como la hemos dibujado, sino sobre un cuerpo finito módulo $2^{256} – 2^{32} – 2^9 – 2^8 – 2^7 – 2^6 – 2^4 - 1$, que es primo. Además se selecciona un punto base para hacer las operaciones que tiene como orden un primo lo suficientemente grande. Tanto estos parámetros como la curva son los mismos para todos los usuarios. Por tener visualizar qué aspecto tiene una curva elíptica sobre un cuerpo finito, observémos este ejemplo en el que se toma como primo el número $67$:
+Realmente Bitcoin no usa la curva anterior sobre $\R$ tal como la hemos dibujado, sino sobre un cuerpo finito módulo $2^{256} – 2^{32} – 2^9 – 2^8 – 2^7 – 2^6 – 2^4 - 1$, que es primo. Además se selecciona un punto base para hacer las operaciones que tiene como orden un primo lo suficientemente grande. Tanto estos parámetros como la curva son los mismos para todos los usuarios. Por visualizar qué aspecto tiene una curva elíptica sobre un cuerpo finito, observémos este ejemplo en el que se toma como primo el número $67$:
 \begin{figure}[h!]
 \includegraphics[scale=0.38]{field}
 \end{figure}
@@ -246,7 +246,7 @@ En Bitcoin, tanto el punto base como su orden se representan como un \emph{strin
 \item Orden:  FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
 \end{itemize}
 
-Así pues, las claves también se representarán de este modo. Ahora que ya tenemos las claves, podemos empezar a firmar. En el funcionamiento real, los datos que se van a firmar se pasan por una función hash para que tengan el mismo número de bits (256) que el orden de $P$. Sin embargo, por simplicidad, nos saltaremos ese paso. Sea pues $P$ el punto base, $N$ su orden, $x$ la clave privada, $m$ un mensaje que vamos a firmar y $h$ una función hash que se usa para que el mensaje tenga el mísmo número de bits (256) que el orden de $P$. El algoritmo de la firma digital consiste en lo siguiente:
+Así pues, las claves también se representarán de este modo. Ahora que ya tenemos las claves, podemos empezar a firmar. Sea pues $P$ el punto base, $N$ su orden, $x$ la clave privada, $m$ un mensaje que vamos a firmar y $h$ una función hash que se usa para que el mensaje tenga el mísmo número de bits (256) que el orden de $P$. El algoritmo de la firma digital consiste en lo siguiente:
 \begin{enumerate}
 \item Calcular $e=h(m)$.
 \item Sea $z$ el conjunto de $l$ dígitos más a la izquierda de $e$, donde $l$ es la longitud en bits de $N$.
@@ -257,7 +257,7 @@ Así pues, las claves también se representarán de este modo. Ahora que ya tene
 \item La firma es el par $(r,s)$. 
 \end{enumerate}
 
-Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada\footnote{Un error de este tipo fue usado en 2010 para extraer las claves de PS3 \url{https://nakedsecurity.sophos.com/2012/10/25/sony-ps3-hacked-for-good-master-keys-revealed/}}, ya que el resto de datos son conocidos. Dadas dos firmas $(r,s)$ y $(r,s')$ en las que se ha utilizado la misma $k$ para dos mensajes conocidos $m$ y $m'$, un atacante puede utilizar la ecuación en el paso 6 para calcular $k$, ya que $s-s'\equiv k^{-1}(z-z')\mod N$, El atacante puede hallar entonces $k=\frac{z-z'}{s-s'}\mod N$. Como $s=k^{-1}(z+rx)\mod N$, ahora puede calcular la clave de privada $x=\frac{sk-z}{r}\mod N$. 
+Es importante que $k$ sea diferente en cada firma para evitar la posibilidad de extraer la clave privada\footnote{Un error de este tipo fue usado en 2010 para extraer las claves de PS3 \url{https://nakedsecurity.sophos.com/2012/10/25/sony-ps3-hacked-for-good-master-keys-revealed/}}, ya que el resto de datos son conocidos. Dadas dos firmas $(r,s)$ y $(r,s')$ en las que se ha utilizado la misma $k$ para dos mensajes conocidos $m$ y $m'$, un atacante puede utilizar la ecuación en el paso 6 para calcular $k$, ya que $s-s'\equiv k^{-1}(z-z')\mod N$. El atacante puede hallar entonces $k=\frac{z-z'}{s-s'}\mod N$. Como $s=k^{-1}(z+rx)\mod N$, ahora puede calcular la clave de privada $x=\frac{sk-z}{r}\mod N$. 
 
 Al igual que las claves, la firma se suele expresar en hexadecimal, pero a la hora de hacer los cálculos deben ser expresados como enteros. Para ver ejemplos consultar \cite{Eric}.
 
@@ -322,7 +322,7 @@ H(H(Data+Nonce)) < Dif
 \]
 La dificultad es un valor que se ajusta en función de la capacidad computacional de la red. Por las propiedades de las funciones hash, la unica manera de conseguir un hash inferior al valor objetivo es ir probando diferentes valores de nonce, hasta dar con uno que genere el hash buscado. De este modo, si un atacante quiere modificar la cadena de bloques, ya sea para anular transacciones, ya sea para tener control de lo que se anota en el registro común, necesitará un poder computacional superior al $50\%$ de la red. La red computacional de Bitcoin es la más potente que existe en el mundo, por encima de Google o la NSA.
 
-¿Y cómo varía la dificultad del problema? Como se busca un nonce tal que $H(H(Data+Nonce)) < Dif$, bastaré con fijar un valor de $Dif$ cada vez más pequeño. En la representación hexadecimal del hash (o en otra cualquiera) esto se consigue eligiendo una cadena de caracteres que empiece por una determinada cantidad de ceros. Cuantos más ceros, más pequeño es el valor, por lo que a grandes rasgos se trata de buscar el valor del nonce que te dé un hash con la cantidad buscada de ceros iniciales. 
+¿Y cómo varía la dificultad del problema? Como se busca un nonce tal que $H(H(Data+Nonce)) < Dif$, bastará con fijar un valor de $Dif$ cada vez más pequeño. En la representación hexadecimal del hash (o en otra cualquiera) esto se consigue eligiendo una cadena de caracteres que empiece por una determinada cantidad de ceros. Cuantos más ceros, más pequeño es el valor, por lo que a grandes rasgos se trata de buscar el valor del nonce que te dé un hash con la cantidad buscada de ceros iniciales. 
 
 \begin{ej} Vamos a ver un ejemplo simplificado de cómo se construye un bloque. Para ello vamos a usar hashes reducidos, en lugar de los reales de 40 caracteres. Supongamos que el valor del hash del anterior bloque es $00000000000001adf44c7d69767585$ (comienza con 13 ceros). Consideremos dos hashes de transacciones esperando a ser incluidas en el bloque $5572eca4dd4$ y  $db7d0c0b845$. Por último sea el hash de la transacción por la cual el minero intenta recibir recompensa $916d849af76$. El nuevo bloqué tendrá todos los hashes mencionados de la siguiente forma: 
 $$00000000000001adf44c7d69767585--5572eca4dd4-db7d0c0b845-916d849af76--$$
@@ -421,9 +421,9 @@ Por su propia estructura y funcionamiento, la blockchain puede garantizar que un
 El voto electrónico mejoraría la rapidez y abarataría considerablemente el coste de unas elecciones y referéndums, lo que permitiría hacer referéndums con más frecuencia y mejorar así la democracia.
 
 \end{itemize}
-
-\addcontentsline{toc}{section}{Bibliografía}
 \newpage
+\addcontentsline{toc}{section}{Bibliografía}
+
 \begin{thebibliography}{}
 \bibitem{Bizant} Cristina Pérez-Solà \& Jordi Herrera-Joancomartí, \textit{Bitcoins y el problema de los generales bizantinos}, 2014. \url{https://web.ua.es/en/recsi2014/documentos/papers/bitcoins-y-el-problema-de-los-generales-bizantinos.pdf}
 \bibitem{Khan} Kahn Academy. \url{https://www.khanacademy.org/economics-finance-domain/core-finance/money-and-banking/bitcoin/v/bitcoin-what-is-it}
