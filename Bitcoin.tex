@@ -134,7 +134,7 @@ Para un $n$ fijo, llamamos \textbf{función hash} a una función $h : \mathcal{M
 \end{defi}
 Al texto recibido se le suele llamar \textbf{input} o \textbf{mensaje}, mientras que el texto devuelto se puede llamar \textbf{output} o \textbf{digest}. Normalmente el digest se expresa en hexadecimal con 40 caracteres. 
 \end{defi}
-Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, si tenemos $1,71\times 10^{17}$, ¿cuál es la probabilidad de que tengamos una colisión? Tan solo $1$ entre $100$ billones, es decir, la misma que tu casa sea destruida por un impacto de meteorito.
+Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, si tenemos $1,71\times 10^{17}$ mensajes, ¿cuál es la probabilidad de que tengamos una colisión? Tan solo $1$ entre $100$ billones, es decir, la misma que tu casa sea destruida por un impacto de meteorito.
 
 Estas funciones tienen la propiedad de que un pequeño cambio en el mensaje recibido genera una salida totalmente distinta, lo que las vuelve impredecibles, como podemos observar en el siguiente ejemplo.
 	
@@ -285,7 +285,7 @@ No es evidente que esta verificación realmente funcione, pero podemos probarlo.
 
 Comenzamos esta sección definiendo un concepto al que nos hemos referido varias veces y que es fundamental tanto en Bitcoin como en otras aplicaciones que han ido surgiendo a raíz del éxito de esta moneda. 
 \begin{defi}
-Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro de contabilidad de Bitcoin, es decir, como el registro de cada transacción que se ha hecho desde que se creó Bitcoin. Este registro único se genera, distribuye y almacena de forma distribuida, de modo que todos los nodos están de acuerdo en su contenido sin la posibilidad de ser intervenido de ninguna forma. 
+Definimos la \textbf{cadena de bloques} o \textbf{blockchain} como el registro de contabilidad de Bitcoin, es decir, como el ``libro'' donde están apuntadas todas las transacciones desde que empezó a operar en 2009.  Este registro único se genera, comparte y almacena de forma distribuida, de modo que todos los nodos están de acuerdo en su contenido sin la posibilidad de ser intervenido de ninguna forma. 
 \end{defi}
 
 Este registro público descentralizado es esencial y es lo que diferenció a Bitcoin de todas las monedas virtuales anteriores. Posee infinidad de aplicaciones que todavía se van descubriendo más allá de las criptodivisas y se cree que es una tecnología que cambiará el mundo. Esta cadena solo permite añadir información -no se puede quitar ni modificar nada-. 
