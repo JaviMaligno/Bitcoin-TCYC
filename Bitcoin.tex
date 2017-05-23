@@ -134,7 +134,7 @@ Para un $n$ fijo, llamamos \textbf{función hash} a una función $h : \mathcal{M
 \end{defi}
 Al texto recibido se le suele llamar \textbf{input} o \textbf{mensaje}, mientras que el texto devuelto se puede llamar \textbf{output} o \textbf{digest}. Normalmente el digest se expresa en hexadecimal con 40 caracteres. 
 \end{defi}
-Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, cuya salida es de 160 bits, para tener una probabilidad de tener una colisión de $\frac{1}{2}$ necesitaríamos $1.24\cdot 10^{24}$ elementos.
+Algunos ejemplos de funciones hash son SHA1, CRC32 o SHA256. Uno podría preguntarse con qué frecuencia se producen colisiones, es decir, que dos entradas de texto tengan un mismo hash. En el caso del SHA1, si tenemos $1,71\times 10^{17}$, ¿cuál es la probabilidad de que tengamos una colisión? Tan solo $1$ entre $100$ billones, es decir, la misma que tu casa sea destruida por un impacto de meteorito.
 
 Estas funciones tienen la propiedad de que un pequeño cambio en el mensaje recibido genera una salida totalmente distinta, lo que las vuelve impredecibles, como podemos observar en el siguiente ejemplo.
 	
