@@ -151,7 +151,7 @@ No todas las funciones hash son seguras\footnote{SHA1 es un ejemplo de esto \url
 
 \subsection{Curvas elípticas.}
 \begin{defi}
-Una \textbf{curva elíptica} es una curva plana representada algebraicamente como una ecuación de la forma $y=x^3+ax+b$. 
+Una \textbf{curva elíptica} es una curva plana representada algebraicamente como una ecuación de la forma $y^2=x^3+ax+b$. 
 \end{defi}
 
 \begin{ej} Para $a=0$ y $b=7$, que es la que usa Bitcoin, tiene esta forma:
@@ -308,7 +308,7 @@ Actualmente, pues como veremos esta cantidad va decreciendo, se premia $12.5$ BT
 Como hemos visto antes, el funcionamiento básico de Bitcoin se basa en las transacciones. Estas se envían de una dirección a otra a través de los nodos, que son los encargados de validar -mediante los mineros- las transacciones y almacenarlas en la blockchain. Ahora explicaremos todas estas funciones de forma detenida.
 
 Además de validar las transacciones, es necesario crear los bloques que las afianzan. Este proceso es el que permite construir el registro común único  -la cadena de bloques- y se realiza de manera totalmente distribuida en Bitcoin. El afianzamiento en Bitcoin se basa en una \textbf{prueba de trabajo} (proof-of-work). 
-\begin{defi} Un \textbf{sistema de prueba de trabajo} o \textbf{POW} es un sistema que requiere que el cliente del servicio realice algún tipo de trabajo que tenga cierto coste y que es verificado fácilmente en la parte del servidor. Normalmente el trabajo consiste en realizar un cómputo en el ordenador del cliente. En el caso de Bitoin, el sistema de prueba de trabajo permite la transferencia de valor de manera directa entre los participantes de una transacción sin necesidad de depender de ninguna organización central de confianza. 
+\begin{defi} Un \textbf{sistema de prueba de trabajo} o \textbf{POW} es un sistema que requiere que el cliente del servicio realice algún tipo de trabajo que tenga cierto coste y que es verificado fácilmente en la parte del servidor. Normalmente el trabajo consiste en realizar un cómputo en el ordenador del cliente. En el caso de Bitcoin, el sistema de prueba de trabajo permite la transferencia de valor de manera directa entre los participantes de una transacción sin necesidad de depender de ninguna organización central de confianza. 
 \end{defi}
 Esta validación puede ocurrir simultáneamente con varios bloques, en cuyo caso se formaría una rama y se continúa a partir del bloque que llega primero.
 \begin{figure}[h!]
